@@ -1,0 +1,115 @@
+---
+// BaseLayout.astro
+import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import TopBar from '../components/TopBar.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title,
+  description =
+    'Studio Forma — interior design for homes, workplaces and hospitality in Brooklyn.',
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Studio Forma" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dosis:wght@300;400;600;700&family=Open+Sans:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Cross-page view transitions -->
+    <ClientRouter />
+  </head>
+  <body>
+    <TopBar />
+    <SiteHeader />
+    <main>
+      <slot />
+    </main>
+    <SiteFooter />
+
+    <a
+      href="#"
+      class="back-to-top"
+      id="backToTop"
+      aria-label="Back to top"
+      role="button"
+    >
+      &#8593;
+    </a>
+
+    <script>
+      // Re-runs after every page load AND every client-side navigation,
+      // because the view-transition router swaps the <body> contents.
+      const initPage = () => {
+        // Mobile nav toggle
+        const toggle = document.getElementById('navToggle');
+        const nav = document.getElementById('mainNav');
+        if (toggle && nav && toggle.dataset.bound !== 'true') {
+          toggle.dataset.bound = 'true';
+          toggle.addEventListener('click', () => nav.classList.toggle('open'));
+        }
+
+        // Sticky header shadow on scroll
+        const header = document.getElementById('siteHeader');
+        if (header && header.dataset.bound !== 'true') {
+          header.dataset.bound = 'true';
+          window.addEventListener(
+            'scroll',
+            () => {
+              header.classList.toggle('scrolled', window.scrollY > 10);
+            },
+            { passive: true },
+          );
+        }
+
+        // Back-to-top visibility + click
+        const btn = document.getElementById('backToTop');
+        if (btn && btn.dataset.bound !== 'true') {
+          btn.dataset.bound = 'true';
+          window.addEventListener(
+            'scroll',
+            () => {
+              btn.classList.toggle('show', window.scrollY > 400);
+            },
+            { passive: true },
+          );
+          btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+        }
+      };
+
+      document.addEventListener('astro:page-load', initPage);
+    </script>
+  </body>
+</html>
