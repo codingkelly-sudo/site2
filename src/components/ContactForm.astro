@@ -1,0 +1,89 @@
+---
+// ContactForm.astro
+---
+
+<form class="contact-form" id="contactForm" novalidate>
+  <div class="form-group">
+    <label for="cf-name">Your Name</label>
+    <input
+      type="text"
+      id="cf-name"
+      name="name"
+      placeholder="John Doe"
+      autocomplete="name"
+      required
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="cf-email">Email Address</label>
+    <input
+      type="email"
+      id="cf-email"
+      name="email"
+      placeholder="john@example.com"
+      autocomplete="email"
+      required
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="cf-message">Message</label>
+    <textarea
+      id="cf-message"
+      name="message"
+      rows="5"
+      placeholder="Tell us about your project…"
+      required></textarea>
+  </div>
+
+  <button type="submit" class="btn btn-line" style="width:100%">
+    Send Message
+  </button>
+</form>
+
+<div
+  id="formSuccess"
+  class="form-success"
+  role="status"
+  aria-live="polite"
+  hidden
+>
+  <h3>Thank you!</h3>
+  <p>Your message has been sent. We’ll get back to you shortly.</p>
+</div>
+
+<style>
+  .form-success {
+    padding: 20px;
+    border: 1px solid var(--c-accent);
+    color: var(--c-accent);
+    text-align: center;
+  }
+</style>
+
+<script>
+  const initContactForm = () => {
+    const form = document.getElementById('contactForm') as HTMLFormElement | null;
+    const success = document.getElementById('formSuccess') as HTMLElement | null;
+
+    // Guard: bail out if either node is missing, or already initialised
+    if (!form || !success || form.dataset.bound === 'true') return;
+    form.dataset.bound = 'true';
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      // Let the browser run native validation if available
+      if (form.reportValidity && !form.reportValidity()) return;
+
+      // TODO: replace with a real fetch() to your endpoint
+      form.hidden = true;
+      success.hidden = false;
+      success.focus?.();
+    });
+  };
+
+  // Astro's ClientRouter fires this on first load *and* on every SPA nav
+  document.addEventListener('astro:page-load', initContactForm);
+</script>

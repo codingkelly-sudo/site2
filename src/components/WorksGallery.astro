@@ -1,0 +1,93 @@
+---
+// WorksGallery.astro
+import { WORKS } from '../data/works';
+
+interface Filter {
+  key: 'all' | 'residential' | 'hospitality' | 'office' | 'commercial';
+  label: string;
+}
+
+const FILTERS: Filter[] = [
+  { key: 'all',         label: 'All Works' },
+  { key: 'commercial',  label: 'Commercial' },
+  { key: 'hospitality', label: 'Hospitality' },
+  { key: 'office',      label: 'Office' },
+  { key: 'residential', label: 'Residential' },
+];
+---
+
+<ul class="filters" role="group" aria-label="Filter works">
+  {FILTERS.map((f, i) => (
+    <li>
+      <a
+        href="#"
+        data-filter={f.key}
+        aria-pressed={i === 0 ? 'true' : 'false'}
+        class:list={{ active: i === 0 }}
+      >
+        {f.label}
+      </a>
+    </li>
+  ))}
+</ul>
+
+<div class="gallery" id="worksGallery">
+  {WORKS.map((work) => (
+    <div
+      class="gallery-item"
+      data-category={work.category}
+      aria-hidden="false"
+    >
+      <a href={`/works/${work.title.toLowerCase().replace(/\s+/g, '-')}`}>
+        <div
+          class="gallery-img"
+          style={`background-image:url('${work.img}')`}
+          role="img"
+          aria-label={work.title}
+        ></div>
+        <div class="overlay" aria-hidden="true">
+          <span class="project-name">{work.title}</span>
+        </div>
+      </a>
+    </div>
+  ))}
+</div>
+
+<script>
+  const initWorksFilters = () => {
+    const gallery = document.getElementById('worksGallery');
+    if (!gallery || gallery.dataset.bound === 'true') return;
+    gallery.dataset.bound = 'true';
+
+    const filterLinks = Array.from(
+      document.querySelectorAll<HTMLAnchorElement>('.filters a'),
+    );
+    const items = Array.from(
+      gallery.querySelectorAll<HTMLElement>('.gallery-item'),
+    );
+
+    const applyFilter = (filter: string) => {
+      filterLinks.forEach((link) => {
+        const isActive = link.dataset.filter === filter;
+        link.classList.toggle('active', isActive);
+        link.setAttribute('aria-pressed', String(isActive));
+      });
+
+      items.forEach((item) => {
+        const visible =
+          filter === 'all' || item.dataset.category === filter;
+        item.classList.toggle('hide', !visible);
+        item.hidden = !visible;
+      });
+    };
+
+    filterLinks.forEach((link) => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        applyFilter(link.dataset.filter ?? 'all');
+      });
+    });
+  };
+
+  document.addEventListener('astro:page-load', initWorksFilters);
+</script>

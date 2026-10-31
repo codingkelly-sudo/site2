@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SERVICES } from '../data/services';
+---
+
+<BaseLayout
+  title="Our Services — Studio Forma"
+  description="Residential, office, hospitality and commercial interior design services by Studio Forma. From first sketch to final install."
+>
+  <section class="page-header">
+    <div class="container center">
+      <h1>Our Services</h1>
+      <div class="breadcrumb">
+        <a href="/">Home</a> <span>/</span> Our Services
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="row">
+        {SERVICES.map((s) => (
+          <div class="col-md-6 service-card">
+            <h3>
+              <strong>{s.title[0]}</strong> {s.title[1]}
+            </h3>
+            <p>{s.details}</p>
+            <div
+              class="service-card-img"
+              style={`background-image:url('${s.img}')`}
+              role="img"
+              aria-label={`${s.title[0]} ${s.title[1]}`}
+            ></div>
+            <a href="/contact" class="btn btn-line">Read More</a>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section cta-band">
+    <div class="container center">
+      <h2>Ready to start your project?</h2>
+      <p class="text-muted">
+        Get in touch with our team today for a consultation.
+      </p>
+      <a href="/contact" class="btn btn-line">Get Quotation</a>
+    </div>
+  </section>
+</BaseLayout>

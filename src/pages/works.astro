@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import WorksGallery from '../components/WorksGallery.astro';
+---
+
+<BaseLayout
+  title="Our Works — Studio Forma"
+  description="Selected residential, hospitality, office and commercial interiors designed by Studio Forma in Brooklyn."
+>
+  <section class="page-header">
+    <div class="container center">
+      <h1>Our Works</h1>
+      <div class="breadcrumb">
+        <a href="/">Home</a> <span>/</span> Our Works
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <WorksGallery />
+    </div>
+  </section>
+</BaseLayout>

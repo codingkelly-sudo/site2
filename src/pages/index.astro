@@ -1,0 +1,85 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import ProcessTabs from '../components/ProcessTabs.astro';
+import { SERVICES } from '../data/services';
+import { WORKS, slugify } from '../data/works';
+
+const featured = WORKS.slice(0, 4);
+---
+
+<BaseLayout
+  title="Studio Forma — Interior Design"
+  description="Studio Forma designs warm, functional interiors for homes, workplaces and hospitality across Brooklyn and beyond."
+>
+  <Hero />
+
+  <!-- Services summary -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head center">
+        <h2>What We Do</h2>
+        <span class="sep"><i></i></span>
+      </div>
+      <div class="row">
+        {SERVICES.slice(0, 3).map((s) => (
+          <div class="col-md-4 col-sm-6 service-col">
+            <h3>
+              <strong>{s.title[0]}</strong> {s.title[1]}
+            </h3>
+            <p>{s.summary}</p>
+            <div
+              class="service-img"
+              style={`background-image:url('${s.img}')`}
+              role="img"
+              aria-label={`${s.title[0]} ${s.title[1]}`}
+            ></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Process -->
+  <section class="section process-band">
+    <div class="container">
+      <div class="section-head center light">
+        <h2>Our Process</h2>
+        <span class="sep"><i></i></span>
+      </div>
+      <ProcessTabs />
+    </div>
+  </section>
+
+  <!-- Selected works preview -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head center">
+        <h2>Selected Works</h2>
+        <span class="sep"><i></i></span>
+      </div>
+
+      <div class="gallery">
+        {featured.map((work) => (
+          <div class="gallery-item" data-category={work.category}>
+            <a href={`/works/${slugify(work.title)}`}>
+              <div
+                class="gallery-img"
+                style={`background-image:url('${work.img}')`}
+                role="img"
+                aria-label={work.title}
+              ></div>
+              <div class="overlay" aria-hidden="true">
+                <span class="project-name">{work.title}</span>
+              </div>
+            </a>
+          </div>
+        ))}
+      </div>
+
+      <div class="center cta-wrap">
+        <a href="/works" class="btn btn-line">View All Works</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

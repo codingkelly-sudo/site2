@@ -1,0 +1,31 @@
+---
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/works', label: 'Works' },
+  { href: '/services', label: 'Services' },
+  { href: '/contact', label: 'Contact Us' },
+];
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) =>
+  href === '/' ? currentPath === '/' : currentPath.startsWith(href);
+---
+<header class="site-header" id="siteHeader">
+  <div class="container header-inner">
+    <a href="/" class="logo">STUDIO<span>FORMA</span></a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">&#9776;</button>
+    <nav class="main-nav" id="mainNav">
+      <ul>
+        {links.map((link) => (
+          <li>
+            <a
+              href={link.href}
+              class:list={['nav-link', { active: isActive(link.href) }]}
+            >
+              {link.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</header>

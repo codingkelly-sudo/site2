@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Page Not Found — Studio Forma"
+  description="The page you were looking for could not be found."
+>
+  <section class="page-header">
+    <div class="container center">
+      <h1>404</h1>
+      <div class="breadcrumb">
+        <a href="/">Home</a> <span>/</span> Not Found
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container center">
+      <p class="text-muted">
+        The page you're looking for doesn't exist or has been moved.
+      </p>
+      <a href="/" class="btn btn-line">Back to Home</a>
+    </div>
+  </section>
+</BaseLayout>

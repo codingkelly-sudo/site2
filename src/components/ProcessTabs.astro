@@ -1,0 +1,113 @@
+---
+// ProcessTabs.astro
+interface Step {
+  label: string;
+  text: string;
+}
+
+const steps: Step[] = [
+  {
+    label: 'Meet & Agree',
+    text: 'We start with a relaxed consultation to understand your space, budget and taste. You get a written brief and a clear fee proposal before anything begins — no surprises later.',
+  },
+  {
+    label: 'Idea & Concept',
+    text: 'Mood boards, material samples and spatial sketches turn the brief into a direction. We refine two or three concepts with you until one feels unmistakably right.',
+  },
+  {
+    label: 'Design & Create',
+    text: 'Detailed drawings, lighting plans, joinery and finish schedules are produced. We coordinate trades and suppliers so the build matches the drawings.',
+  },
+  {
+    label: 'Build & Install',
+    text: 'On-site supervision through to snagging, furniture delivery and styling. We hand over a finished, photographed space ready to live or work in.',
+  },
+];
+---
+
+<div class="process-tabs">
+  <ul class="process-nav" role="tablist" aria-label="Our process steps">
+    {steps.map((step, i) => (
+      <li
+        role="tab"
+        id={`process-tab-${i}`}
+        aria-controls={`process-panel-${i}`}
+        aria-selected={i === 0 ? 'true' : 'false'}
+        tabindex={i === 0 ? 0 : -1}
+        class:list={{ active: i === 0 }}
+      >
+        {step.label}
+      </li>
+    ))}
+  </ul>
+
+  <div class="process-panels">
+    {steps.map((step, i) => (
+      <div
+        role="tabpanel"
+        id={`process-panel-${i}`}
+        aria-labelledby={`process-tab-${i}`}
+        tabindex={0}
+        class:list={['panel', { active: i === 0 }]}
+        hidden={i !== 0}
+      >
+        <p>{step.text}</p>
+      </div>
+    ))}
+  </div>
+</div>
+
+<script>
+  const initProcessTabs = () => {
+    const root = document.querySelector('.process-tabs');
+    if (!root || (root as HTMLElement).dataset.bound === 'true') return;
+    (root as HTMLElement).dataset.bound = 'true';
+
+    const tabs = Array.from(
+      root.querySelectorAll<HTMLElement>('[role="tab"]'),
+    );
+    const panels = Array.from(
+      root.querySelectorAll<HTMLElement>('[role="tabpanel"]'),
+    );
+    if (!tabs.length || !panels.length) return;
+
+    const activate = (index: number) => {
+      tabs.forEach((tab, i) => {
+        const isActive = i === index;
+        tab.classList.toggle('active', isActive);
+        tab.setAttribute('aria-selected', String(isActive));
+        tab.tabIndex = isActive ? 0 : -1;
+      });
+      panels.forEach((panel, i) => {
+        const isActive = i === index;
+        panel.classList.toggle('active', isActive);
+        panel.hidden = !isActive;
+      });
+    };
+
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => activate(i));
+
+      // Keyboard support (WAI-ARIA tabs pattern)
+      tab.addEventListener('keydown', (e) => {
+        let next = -1;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+          next = (i + 1) % tabs.length;
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+          next = (i - 1 + tabs.length) % tabs.length;
+        } else if (e.key === 'Home') {
+          next = 0;
+        } else if (e.key === 'End') {
+          next = tabs.length - 1;
+        }
+        if (next !== -1) {
+          e.preventDefault();
+          activate(next);
+          tabs[next].focus();
+        }
+      });
+    });
+  };
+
+  document.addEventListener('astro:page-load', initProcessTabs);
+</script>

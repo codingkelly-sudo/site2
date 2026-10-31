@@ -1,0 +1,22 @@
+---
+const slides = [
+  'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1600&q=80',
+  'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1600&q=80',
+  'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1600&q=80'
+];
+---
+<section class="hero">
+  {slides.map((img, i) => (
+    <div
+      class:list={['hero-slide', { active: i === 0 }]}
+      style={`background-image:url('${img}')`}
+    />
+  ))}
+  <div class="hero-overlay"></div>
+  <div class="container hero-content">
+    <span class="hero-kicker">Our expertise for</span>
+    <h1 class="hero-title">Interior Design</h1>
+    <a href="/works" class="btn btn-outline">Our Works</a>
+  </div>
+  <div class="hero-dots">
+   
